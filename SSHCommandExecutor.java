@@ -1,4 +1,3 @@
-package afafafaf;
 
 import com.jcraft.jsch.*;
 
