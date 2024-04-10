@@ -1,4 +1,4 @@
-package afafafaf;
+//package afafafaf;
 
 import com.jcraft.jsch.*;
 
@@ -12,17 +12,21 @@ public class SSHCommandExecutor {
 
     public static void main(String[] args) throws InterruptedException {
         try {
+            // Read connection details and commands from files
             String[] connectionDetails = readConnectionDetails("connection.txt");
             String[] commands = readCommands("commands.txt");
 
+            // Check if connection details and commands are successfully read
             if (connectionDetails != null && commands != null) {
-            	  System.out.println("--------------------------------------------------------------------------------");
-                  System.out.println("|                              Server Connection Log                             |");
-                  System.out.println("--------------------------------------------------------------------------------");
-                 System.out.println("Connecting to Server:  " + connectionDetails[1] + "...");
+                // Display connection log
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("|                              Server Connection Log                             |");
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("Connecting to Server:  " + connectionDetails[1] + "...");
                 Thread.sleep(2000);
                 System.out.println("");
                 System.out.println("");
+
                 // Connect once outside the loop
                 Session session = connectSSH(connectionDetails[0], connectionDetails[1], connectionDetails[2], connectionDetails[3]);
                 System.out.println("**Connection successful**");
@@ -31,8 +35,8 @@ public class SSHCommandExecutor {
                 System.out.println("--------------------------------------------------------------------------------");
                 System.out.println("|                            Execution of Commands Log                           |");
                 System.out.println("--------------------------------------------------------------------------------");
-                System.out.println();  int successCount = 0;
-                
+                System.out.println();
+                int successCount = 0;
                 int failureCount = 0;
                 System.out.println();
 
@@ -52,11 +56,12 @@ public class SSHCommandExecutor {
                 System.out.println("--------------------------------------------------------------------------------");
                 System.out.println("|                            Summary Log                                        |");
                 System.out.println("--------------------------------------------------------------------------------");
-                System.out.println("| Total input commands count: " + commands.length);
-                System.out.println("| Commands executed successfully: " + successCount);
-                System.out.println("| Commands failed: " + failureCount);
+                System.out.println("| Total input commands count" +"("+connectionDetails[1]+"):   "+ commands.length);
+                System.out.println("| Commands executed successfully" +"("+connectionDetails[1]+"):   " + successCount);
+                System.out.println("| Commands failed" +"("+connectionDetails[1]+"):   " + failureCount);
                 System.out.println("--------------------------------------------------------------------------------");
-            // Disconnect the session after executing all commands
+
+                // Disconnect the session after executing all commands
                 session.disconnect();
             } else {
                 System.out.println("Failed to read connection details or commands. Please check the input files.");
@@ -72,6 +77,7 @@ public class SSHCommandExecutor {
         }
     }
 
+    // Establish SSH connection to the server
     public static Session connectSSH(String password, String host, String username, String port) throws JSchException {
         JSch jsch = new JSch();
         Session session = jsch.getSession(username, host, Integer.parseInt(port));
@@ -81,6 +87,7 @@ public class SSHCommandExecutor {
         return session;
     }
 
+    // Execute a command on the SSH session
     public static boolean executeCommand(Session session, String command) throws JSchException, IOException {
         try {
             ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
@@ -106,6 +113,7 @@ public class SSHCommandExecutor {
         }
     }
 
+    // Read connection details from a file
     public static String[] readConnectionDetails(String fileName) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String[] connectionDetails = new String[4];
@@ -113,17 +121,17 @@ public class SSHCommandExecutor {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(":");
                 if (parts.length == 2) {
-                    switch (parts[0].trim()) {
-                        case "Password":
+                    switch (parts[0].trim().toLowerCase()) {
+                        case "password":
                             connectionDetails[0] = parts[1].trim();
                             break;
-                        case "ServerIPAddress":
+                        case "serveripaddress":
                             connectionDetails[1] = parts[1].trim();
                             break;
-                        case "userName":
+                        case "username":
                             connectionDetails[2] = parts[1].trim();
                             break;
-                        case "PortNo":
+                        case "portno":
                             connectionDetails[3] = parts[1].trim();
                             break;
                         default:
@@ -137,11 +145,10 @@ public class SSHCommandExecutor {
         }
     }
 
+    // Read commands from a file
     public static String[] readCommands(String fileName) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             return br.lines().toArray(String[]::new);
         }
     }
 }
-
-
