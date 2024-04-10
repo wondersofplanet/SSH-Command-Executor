@@ -1,0 +1,4 @@
+echo Hello from remote server
+echo This is another message
+touch /home/batman/dummty.txt
+ls /home/batman
