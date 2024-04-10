@@ -117,7 +117,7 @@ public class SSHCommandExecutor {
                 	
                 	 System.out.println("Success executing command ---->'" + command + "'");
                      
-                   // String line;// to pritn output
+                   // String line;// to print output
                   //  while ((line = reader.readLine()) != null) {
                     //    System.out.println(line);
                    // }
