@@ -1,3 +1,4 @@
+package afafafaf;
 
 import com.jcraft.jsch.*;
 
@@ -15,16 +16,23 @@ public class SSHCommandExecutor {
             String[] commands = readCommands("commands.txt");
 
             if (connectionDetails != null && commands != null) {
-                System.out.println("Connecting to " + connectionDetails[1] + "...");
+            	  System.out.println("--------------------------------------------------------------------------------");
+                  System.out.println("|                              Server Connection Log                             |");
+                  System.out.println("--------------------------------------------------------------------------------");
+                 System.out.println("Connecting to Server:  " + connectionDetails[1] + "...");
                 Thread.sleep(2000);
+                System.out.println("");
                 System.out.println("");
                 // Connect once outside the loop
                 Session session = connectSSH(connectionDetails[0], connectionDetails[1], connectionDetails[2], connectionDetails[3]);
                 System.out.println("**Connection successful**");
-                System.out.println("");
-                System.out.println("Start execution of commands");
-                System.out.println("==========================");
-                int successCount = 0;
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println();
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("|                            Execution of Commands Log                           |");
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println();  int successCount = 0;
+                
                 int failureCount = 0;
                 System.out.println();
 
@@ -40,12 +48,15 @@ public class SSHCommandExecutor {
                 }
                 
                 System.out.println("");
-                System.out.println("===========================");
-                System.out.println("Total input commands count: " + commands.length);
-                System.out.println("Commands executed successfully: " + successCount);
-                System.out.println("Commands failed: " + failureCount);
-
-                // Disconnect the session after executing all commands
+                // Summary Log
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("|                            Summary Log                                        |");
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("| Total input commands count: " + commands.length);
+                System.out.println("| Commands executed successfully: " + successCount);
+                System.out.println("| Commands failed: " + failureCount);
+                System.out.println("--------------------------------------------------------------------------------");
+            // Disconnect the session after executing all commands
                 session.disconnect();
             } else {
                 System.out.println("Failed to read connection details or commands. Please check the input files.");
