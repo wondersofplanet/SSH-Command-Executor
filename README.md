@@ -10,14 +10,13 @@ Input Files: Provide connection details (such as username, password, server IP a
 
 Example connection.txt:
 
-Password:your_password 
-ServerIPAddress:remote_server_ip 
-userName:your_username 
-PortNo:22 
+Password:your_password
+ServerIPAddress:remote_server_ip
+userName:your_username
+PortNo:22
  
 Example commands.txt:
 
-Copy code
 echo Hello
 ls -l
 pwd
