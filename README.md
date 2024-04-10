@@ -17,7 +17,6 @@ PortNo:22
 
 Example commands.txt:
 
-
 Copy code
 echo Hello
 ls -l
@@ -31,25 +30,7 @@ JSch Library: Used for SSH connectivity and command execution. Ensure the JSch l
 
 https://mvnrepository.com/artifact/com.jcraft/jsch/0.1.55
 
-Instructions:
-Clone the repository:
 
-bash
-Copy code
-git clone https://github.com/your_username/ssh-command-executor.git
-Navigate to the project directory:
-
-bash
-Copy code
-cd ssh-command-executor
-
-Compile the Java files:
-
-Copy code
-javac SSHCommandExecutor.java
-Run the program:
-
-Copy code
-java SSHCommandExecutor
+You should place the connection.txt and commands.txt files in the same directory as the Java program (SSHCommandExecutor.java). When you run the program, it will look for these files in the current directory by default. If you want to place them elsewhere, you can specify the full path to the files when calling the program.
 Contributions:
 Contributions and feedback are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
