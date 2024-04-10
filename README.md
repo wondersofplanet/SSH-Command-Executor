@@ -10,10 +10,9 @@ Input Files: Provide connection details (such as username, password, server IP a
 
 Example connection.txt:
 
-Password:your_password
-ServerIPAddress:remote_server_ip
-userName:your_username
-PortNo:22
+userName,Password,ServerIPAddress,PortNo 
+batman,batman,111.11.11.111,22
+batman2,batman3,111.11.11.111,22
  
 Example commands.txt:
 
