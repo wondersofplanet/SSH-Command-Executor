@@ -10,7 +10,7 @@ Input Files: Provide connection details (such as username, password, server IP a
 
 Example connection.txt:
 
-userName,Password,ServerIPAddress,PortNo 
+userName,Password,ServerIPAddress,PortNo
 batman,batman,111.11.11.111,22
 batman2,batman3,111.11.11.111,22
  
