@@ -1,3 +1,4 @@
+package afafafaf;
 
 import com.jcraft.jsch.*;
 
@@ -17,24 +18,36 @@ public class SSHCommandExecutor {
             if (connectionDetails != null && commands != null) {
                 System.out.println("Connecting to " + connectionDetails[1] + "...");
                 Thread.sleep(2000);
-                  int successCount = 0;
+                System.out.println("");
+                // Connect once outside the loop
+                Session session = connectSSH(connectionDetails[0], connectionDetails[1], connectionDetails[2], connectionDetails[3]);
+                System.out.println("**Connection successful**");
+                System.out.println("");
+                System.out.println("Start execution of commands");
+                System.out.println("==========================");
+                int successCount = 0;
                 int failureCount = 0;
-                System.out.println(" " );
+                System.out.println();
+
+                // Send commands in the same session
                 for (String command : commands) {
-                	Thread.sleep(2000);
-                    boolean success = executeCommand(connectionDetails[2], connectionDetails[1], connectionDetails[0], connectionDetails[3], command);
+                    Thread.sleep(2000);
+                    boolean success = executeCommand(session, command);
                     if (success) {
                         successCount++;
                     } else {
                         failureCount++;
                     }
                 }
-                System.out.println("===========================" );
-                 
-                System.out.println("Total input commands count: " + commands.length);
                 
+                System.out.println("");
+                System.out.println("===========================");
+                System.out.println("Total input commands count: " + commands.length);
                 System.out.println("Commands executed successfully: " + successCount);
                 System.out.println("Commands failed: " + failureCount);
+
+                // Disconnect the session after executing all commands
+                session.disconnect();
             } else {
                 System.out.println("Failed to read connection details or commands. Please check the input files.");
             }
@@ -46,6 +59,40 @@ public class SSHCommandExecutor {
             System.out.println("Invalid port number in connection details.");
         } catch (JSchException e) {
             System.out.println("Error executing command on the server: " + e.getMessage());
+        }
+    }
+
+    public static Session connectSSH(String password, String host, String username, String port) throws JSchException {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(username, host, Integer.parseInt(port));
+        session.setPassword(password);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect();
+        return session;
+    }
+
+    public static boolean executeCommand(Session session, String command) throws JSchException, IOException {
+        try {
+            ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+            channelExec.setCommand(command);
+            channelExec.connect();
+
+            try (InputStream in = channelExec.getInputStream();
+                 InputStream err = channelExec.getErrStream();
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                 BufferedReader errReader = new BufferedReader(new InputStreamReader(err))) {
+                // Check if the command execution produced any error
+                boolean isError = errReader.lines().anyMatch(line -> line != null && !line.isEmpty());
+                if (isError) {
+                    System.out.println("###### Error executing command ###### -->'" + command + "'");
+                    return false;
+                } else {
+                    System.out.println("Success executing command ---->'" + command + "'");
+                    return true;
+                }
+            }
+        } finally {
+            // Do not disconnect the session here, as we're keeping the session open for multiple commands
         }
     }
 
@@ -85,47 +132,6 @@ public class SSHCommandExecutor {
             return br.lines().toArray(String[]::new);
         }
     }
-
-    public static boolean executeCommand(String password, String host, String username, String port, String command)
-            throws JSchException, IOException {
-        JSch jsch = new JSch();
-        Session session = jsch.getSession(username, host, Integer.parseInt(port));
-        session.setPassword(password);
-        session.setConfig("StrictHostKeyChecking", "no");
-        try {
-            session.connect();
-               
-        } catch (JSchException e) {
-            throw new JSchException("Unable to connect to the server: " + e.getMessage());
-        }
-
-        try {
-            ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
-            channelExec.setCommand(command);
-            channelExec.connect();
-
-            try (InputStream in = channelExec.getInputStream();
-                 InputStream err = channelExec.getErrStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                 BufferedReader errReader = new BufferedReader(new InputStreamReader(err))) {
-                // Check if the command execution produced any error
-                boolean isError = errReader.lines().anyMatch(line -> line != null && !line.isEmpty());
-                if (isError) {
-                    System.out.println("###### Error executing command ###### -->'" + command + "'");
-                    return false;
-                } else {
-                	
-                	 System.out.println("Success executing command ---->'" + command + "'");
-                     
-                   // String line;// to print output
-                  //  while ((line = reader.readLine()) != null) {
-                    //    System.out.println(line);
-                   // }
-                    return true;
-                }
-            }
-        } finally {
-            session.disconnect();
-        }
-    }
 }
+
+
