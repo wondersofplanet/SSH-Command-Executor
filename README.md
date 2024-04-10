@@ -32,13 +32,12 @@ https://mvnrepository.com/artifact/com.jcraft/jsch/0.1.55
 
 
 run jar using bat command:
-
+in the same folder where jar is, keep your commands.txt and connection.txt.
+----------------------
 java -jar test.jar
 
-in the same folder where jar is, keep your commands.txt and connection.txt.
-
 pause
-
+---------------------
 You should place the connection.txt and commands.txt files in the same directory as the Java program (SSHCommandExecutor.java). When you run the program, it will look for these files in the current directory by default. If you want to place them elsewhere, you can specify the full path to the files when calling the program.
 Contributions:
 Contributions and feedback are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
