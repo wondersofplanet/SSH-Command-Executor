@@ -1,12 +1,28 @@
-This Java program allows you to execute multiple commands TO MULTIPLE remote servers via SSH. It provides functionality to read connection details and commands from text files, execute the commands on the server, and report the success and failure counts along with the total input commands count.
+MultiServerSSHCommandExecutor
+
+Overview:
+This Java program allows you to execute commands on multiple remote servers via SSH. It reads server connection details and commands from text files, establishes SSH connections to each server, executes the provided commands, and provides a summary of the execution results.
 
 Features:
-SSH Connectivity: Utilizes the JSch library to establish an SSH connection to the remote server securely.
-Command Execution: Executes a list of commands sequentially on the remote server.
-Error Handling: Catches and handles various exceptions such as file reading errors, connection failures, and command execution errors.
-Output Reporting: Prints the output of successful commands and reports any errors encountered during command execution.
-Usage:
-Input Files: Provide connection details (such as username, password, server IP address, and port number) in the connection.txt file, and the list of commands to execute in the commands.txt file.
+Multiple Server Support: You can provide a list of servers along with their connection details (username, password, host, and port) in a text file.
+Command Execution: Specify commands to be executed on each server in a separate text file.
+Error Handling: The program handles connection errors and command execution errors gracefully, providing detailed logs for troubleshooting.
+Summary Log: It generates a summary log at the end, indicating the total number of servers processed, any connection issues encountered, and any errors observed during command execution.
+How to Use:
+Prepare Input Files:
+
+Create a text file (connection.txt) containing server connection details in the format: username,password,host,port.
+Create another text file (commands.txt) containing the commands to be executed on each server, with each command on a new line.
+Run the Program:
+
+Compile and run the SSHCommandExecutor.java file.
+The program will read the input files, establish SSH connections, execute commands, and provide a summary of the execution results.
+Review Summary Log:
+
+At the end of execution, review the combined summary log to identify any connection issues or command execution errors.
+Note:
+Ensure that you have SSH access to the remote servers and that the provided credentials are correct.
+Make sure that the input files (connection.txt and commands.txt) are correctly formatted to avoid errors during execution.
 
 Example connection.txt:
 
