@@ -5,6 +5,7 @@ Please download this README file and then read it, this ensure its contents are 
 
 1) Downlaod the code.
 2) build a JAR file from the downloaded code, and finally execute the JAR.
+Note: in the same folder where jar is, keep your commands.txt and connection.txt.
 
 MultiServerSSHCommandExecutor
 
@@ -57,7 +58,7 @@ https://mvnrepository.com/artifact/com.jcraft/jsch/0.1.55
 
 run jar using bat command:
 
-in the same folder where jar is, keep your commands.txt and connection.txt.
+Note: in the same folder where jar is, keep your commands.txt and connection.txt.
 ----------------------
 java -jar test.jar
 
