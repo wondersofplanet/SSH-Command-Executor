@@ -1,5 +1,6 @@
 
-Please download the README file and then review its contents. Sometimes GitHub rendering can cause formatting issues.
+Please download this README file and then raed it , this ensure its contents are accurately interpreted by the user, as GitHub rendering may sometimes cause formatting issues that could mislead readers.
+
 
 MultiServerSSHCommandExecutor
 
