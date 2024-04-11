@@ -18,6 +18,11 @@ public class MultiServerSSHCommandExecutor {
         Set<String> commandExecutionErrorServers = new HashSet<>();
 
         try {
+
+             System.out.println("--------------------------------------------------------------------------------");
+             System.out.println("|                        MultiServerSSHCommandExecutor                           |");
+             System.out.println("--------------------------------------------------------------------------------");
+            
             // Read connection details and commands from files
             String[][] servers = readServerList("connection.txt");
             String[] commands = readCommands("commands.txt");
