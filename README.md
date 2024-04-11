@@ -26,15 +26,15 @@ Make sure that the input files (connection.txt and commands.txt) are correctly f
 
 Example connection.txt:
 
-userName,Password,ServerIPAddress,PortNo
-batman,batman,111.11.11.111,22
-batman2,batman3,111.11.11.111,22
+`userName,Password,ServerIPAddress,PortNo
+`batman,batman,111.11.11.111,22
+`batman2,batman3,111.11.11.111,22
  
-Example commands.txt:
+`Example commands.txt:
 
-echo Hello
-ls -l
-pwd
+`echo Hello
+`ls -l
+`pwd
 
 
 Execution: Compile and run the MultiServerSSHCommandExecutor.java file. The program will establish an SSH connection, execute the commands, and display the output along with success and failure counts.
