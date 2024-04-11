@@ -1,5 +1,5 @@
 
-Please download this README file and then read it, this ensure its contents are accurately interpreted by the user, as GitHub rendering may sometimes cause formatting issues that could mislead readers.
+Please download this README file and then read it, this ensure its contents are accurately understoos by the user, as GitHub rendering may sometimes cause formatting issues that could mislead the reader.
 
 
 MultiServerSSHCommandExecutor
