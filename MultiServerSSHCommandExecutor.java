@@ -1,4 +1,4 @@
-package afafafaf;
+//package afafafaf;
 import com.jcraft.jsch.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
