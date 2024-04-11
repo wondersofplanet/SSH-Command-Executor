@@ -1,4 +1,4 @@
-This Java program allows you to execute multiple commands on a remote server via SSH. It provides functionality to read connection details and commands from text files, execute the commands on the server, and report the success and failure counts along with the total input commands count.
+This Java program allows you to execute multiple commands TO MULTIPLE remote servers via SSH. It provides functionality to read connection details and commands from text files, execute the commands on the server, and report the success and failure counts along with the total input commands count.
 
 Features:
 SSH Connectivity: Utilizes the JSch library to establish an SSH connection to the remote server securely.
