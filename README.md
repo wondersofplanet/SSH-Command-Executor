@@ -1,6 +1,10 @@
 
 Please download this README file and then read it, this ensure its contents are accurately understood by the user, as GitHub rendering may sometimes cause formatting issues that could mislead the reader.
 
+--BEST WAY TO USE
+
+1) Downlaod the code.
+2) build a JAR file from the downloaded code, and finally execute the JAR.
 
 MultiServerSSHCommandExecutor
 
