@@ -12,11 +12,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MultiServerSSHCommandExecutor {
-    public static void main(String[] args) {
+    private static final boolean failOutputPrintEnableFlag = true;
+	private static final boolean sucessOutputPrintEnableFlag = true;
+
+	public static void main(String[] args) {
         Set<String> failedServers = new HashSet<>();
         Set<String> connectionErrorServers = new HashSet<>();
         Set<String> commandExecutionErrorServers = new HashSet<>();
-
+      
         try {
 
              System.out.println("--------------------------------------------------------------------------------");
@@ -211,12 +214,17 @@ public class MultiServerSSHCommandExecutor {
                 // Read and print error messages
                 List<String> errorLines = errReader.lines().collect(Collectors.toList());
                 if (!errorLines.isEmpty()) {
+                	
                     System.out.println("Error executing command '" + command + "':");
+                    if(failOutputPrintEnableFlag) {
                     errorLines.forEach(line -> System.out.println(line));
+                    }
                     return false;
                 } else {
                     System.out.println("Success executing command ---->'" + command + "'");
+                    if(sucessOutputPrintEnableFlag) {
                     outputLines.forEach(line -> System.out.println("Output of command '" + command + "': " + line));
+                    }
                     return true;
                 }
             }
