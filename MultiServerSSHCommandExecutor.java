@@ -1,4 +1,4 @@
-//package afafafaf;
+package afafafaf;
 import com.jcraft.jsch.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -205,17 +205,22 @@ public class MultiServerSSHCommandExecutor {
                  InputStream err = channelExec.getErrStream();
                  BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                  BufferedReader errReader = new BufferedReader(new InputStreamReader(err))) {
-                // Check if the command execution produced any error
-                boolean isError = errReader.lines().anyMatch(line -> line != null && !line.isEmpty());
-                if (isError) {
-                    System.out.println("###### Error executing command ###### -->'" + command + "'");
+                // Read and print command output
+                List<String> outputLines = reader.lines().collect(Collectors.toList());
+
+                // Read and print error messages
+                List<String> errorLines = errReader.lines().collect(Collectors.toList());
+                if (!errorLines.isEmpty()) {
+                    System.out.println("Error executing command '" + command + "':");
+                    errorLines.forEach(line -> System.out.println(line));
                     return false;
                 } else {
                     System.out.println("Success executing command ---->'" + command + "'");
+                    outputLines.forEach(line -> System.out.println("Output of command '" + command + "': " + line));
                     return true;
                 }
             }
-        } finally {
+        }finally {
             // Do not disconnect the session here, as we're keeping the session open for multiple commands
         }
     }
