@@ -215,15 +215,17 @@ public class MultiServerSSHCommandExecutor {
                 List<String> errorLines = errReader.lines().collect(Collectors.toList());
                 if (!errorLines.isEmpty()) {
                 	
-                    System.out.println("Error executing command '" + command + "':");
+                    System.out.println("Error executing command ---> '" + command + "':\n");
                     if(failOutputPrintEnableFlag) {
                     errorLines.forEach(line -> System.out.println(line));
+                    System.out.println("\n");
                     }
                     return false;
                 } else {
-                    System.out.println("Success executing command ---->'" + command + "'");
+                    System.out.println("Success executing command --->'" + command + "'");
                     if(sucessOutputPrintEnableFlag) {
-                    outputLines.forEach(line -> System.out.println("Output of command '" + command + "': " + line));
+                    outputLines.forEach(line -> System.out.println("Output of command '" + command + "'-->\n" + line));
+                    System.out.println("\n");
                     }
                     return true;
                 }
