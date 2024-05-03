@@ -71,3 +71,5 @@ You should place the connection.txt and commands.txt files in the same directory
 
 Contributions:
 Contributions and feedback are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
+
+useful command - echo "Hello, the memory size of $(hostname -I) is $(awk '/MemTotal/ {print $2}' /proc/meminfo)"
