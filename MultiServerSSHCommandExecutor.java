@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +30,23 @@ public class MultiServerSSHCommandExecutor {
             // Read connection details from file
             String[][] servers = readServerList("connection.txt");
 
+            // Read servers from commands file
+            List<String> serversInCommands = readServersFromCommands("commands.txt");
+
+            // Validate if servers in commands file are present in connection file
+            List<String> serversNotInConnection = serversInCommands.stream()
+                    .filter(server -> Arrays.stream(servers).noneMatch(arr -> arr[2].equals(server)))
+                    .collect(Collectors.toList());
+
+            if (!serversNotInConnection.isEmpty()) {
+                System.out.println("Error: The following servers listed in commands.txt are not present in connection.txt:");
+                serversNotInConnection.forEach(System.out::println);
+                return;
+            }
+
             // Iterate through each server
             for (String[] server : servers) {
-                if (server != null && server.length == 4) {
+                if (server != null && server.length == 4 && serversInCommands.contains(server[2])) {
                     String username = server[0];
                     String password = server[1];
                     String host = server[2];
@@ -257,5 +272,22 @@ public class MultiServerSSHCommandExecutor {
             }
         }
         return commands;
+    }
+    
+    // Read servers from commands file
+    public static List<String> readServersFromCommands(String fileName) throws IOException {
+        List<String> servers = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ", 2);
+                if (parts.length == 2) {
+                    servers.add(parts[0]);
+                } else {
+                    System.out.println("Invalid command format: " + line);
+                }
+            }
+        }
+        return servers;
     }
 }
