@@ -13,22 +13,21 @@ import java.util.stream.Collectors;
 
 public class MultiServerSSHCommandExecutor {
     private static final boolean failOutputPrintEnableFlag = true;
-	private static final boolean sucessOutputPrintEnableFlag = true;
+    private static final boolean sucessOutputPrintEnableFlag = true;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         Set<String> failedServers = new HashSet<>();
         Set<String> connectionErrorServers = new HashSet<>();
         Set<String> commandExecutionErrorServers = new HashSet<>();
-      
-        try {
 
-             System.out.println("--------------------------------------------------------------------------------");
-             System.out.println("|                        MultiServerSSHCommandExecutor                           |");
-             System.out.println("--------------------------------------------------------------------------------");
-            
-            // Read connection details and commands from files
+        try {
+            // Display header
+            System.out.println("--------------------------------------------------------------------------------");
+            System.out.println("|                        MultiServerSSHCommandExecutor                           |");
+            System.out.println("--------------------------------------------------------------------------------");
+
+            // Read connection details from file
             String[][] servers = readServerList("connection.txt");
-            String[] commands = readCommands("commands.txt");
 
             // Iterate through each server
             for (String[] server : servers) {
@@ -61,14 +60,29 @@ public class MultiServerSSHCommandExecutor {
                         int failureCount = 0;
                         System.out.println();
 
-                        // Execute commands on the server
-                        for (String command : commands) {
+                        // Read commands from file
+                        List<String> commands = readCommands("commands.txt");
+
+                        // Filter commands for the current server
+                        List<String> serverCommands = commands.stream()
+                                .filter(line -> line.startsWith(host))
+                                .collect(Collectors.toList());
+
+                        // Execute filtered commands
+                        for (String command : serverCommands) {
                             Thread.sleep(2000);
                             try {
-                                boolean success = executeCommand(session, command);
-                                if (success) {
-                                    successCount++;
+                                String[] parts = command.split(" ", 2);
+                                if (parts.length == 2) {
+                                    boolean success = executeCommand(session, parts[1]);
+                                    if (success) {
+                                        successCount++;
+                                    } else {
+                                        failureCount++;
+                                        commandExecutionErrorServers.add(host);
+                                    }
                                 } else {
+                                    System.out.println("Invalid command format: " + command);
                                     failureCount++;
                                     commandExecutionErrorServers.add(host);
                                 }
@@ -79,20 +93,20 @@ public class MultiServerSSHCommandExecutor {
                             }
                         }
 
+                        // Display summary log
                         System.out.println("");
-                        // Summary Log
                         System.out.println("--------------------------------------------------------------------------------");
                         System.out.println("|                            Summary Log                                        |");
                         System.out.println("--------------------------------------------------------------------------------");
-                        System.out.println("| Total input commands count" + "(" + host + "):   " + commands.length);
+                        System.out.println("| Total input commands count" + "(" + host + "):   " + serverCommands.size());
                         System.out.println("| Commands executed successfully" + "(" + host + "):   " + successCount);
                         System.out.println("| Commands failed" + "(" + host + "):   " + failureCount);
                         System.out.println("--------------------------------------------------------------------------------");
 
-                        // Disconnect the session after executing all commands
+                        // Disconnect session
                         session.disconnect();
                     } catch (JSchException e) {
-                    	System.out.println("\u001B[31mError connecting to server: " + host + ". Reason: " + e.getMessage() + "\u001B[0m");
+                        System.out.println("\u001B[31mError connecting to server: " + host + ". Reason: " + e.getMessage() + "\u001B[0m");
                         System.out.println("Skipping to the next server.");
                         connectionErrorServers.add(host);
                     } catch (InterruptedException e) {
@@ -115,36 +129,34 @@ public class MultiServerSSHCommandExecutor {
             System.out.println("--------------------------------------------------------------------------------");
             System.out.println("|                            Combined Summary Log                               |");
             System.out.println("--------------------------------------------------------------------------------");
-             if (connectionErrorServers.size() == 0 && commandExecutionErrorServers.size() == 0) {
-            	System.out.println("\u001B[32m| Total input servers count: " + servers.length + "\u001B[0m");
-            	System.out.println("\u001B[32m| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")\u001B[0m");
-            	System.out.println("\u001B[32m| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")\u001B[0m");
-            	 System.out.println("");
-            	 System.out.println("\u001B[32m ------ NO ISSUES OBSERVED!! -----\u001B[0m");
-            	 System.out.println("\u001B[32m ------ Success!! -----\u001B[0m");
-            } 
-            else {
-            	
-            	System.out.println("| Total input servers count: " + servers.length);
-            	// Check and print connection issues
-            	if (connectionErrorServers.size() > 0) {
-            	    System.out.println("\u001B[31m" + "| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")" + "\u001B[0m");
-            	} else {
-            		 System.out.println("| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")");
-                     }
+            if (connectionErrorServers.size() == 0 && commandExecutionErrorServers.size() == 0) {
+                System.out.println("\u001B[32m| Total input servers count: " + servers.length + "\u001B[0m");
+                System.out.println("\u001B[32m| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")\u001B[0m");
+                System.out.println("\u001B[32m| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")\u001B[0m");
+                System.out.println("");
+                System.out.println("\u001B[32m ------ NO ISSUES OBSERVED!! -----\u001B[0m");
+                System.out.println("\u001B[32m ------ Success!! -----\u001B[0m");
+            } else {
 
-            	// Check and print command execution errors
-            	if (commandExecutionErrorServers.size() > 0) {
-            	    System.out.println("\u001B[31m" + "| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")" + "\u001B[0m");
-            	} else {
-            		   System.out.println("| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")");
-                       }
-                 System.out.println("");
+                System.out.println("| Total input servers count: " + servers.length);
+                // Check and print connection issues
+                if (connectionErrorServers.size() > 0) {
+                    System.out.println("\u001B[31m" + "| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")" + "\u001B[0m");
+                } else {
+                    System.out.println("| Connection issues found in: " + connectionErrorServers + " (Total: " + connectionErrorServers.size() + ")");
+                }
+
+                // Check and print command execution errors
+                if (commandExecutionErrorServers.size() > 0) {
+                    System.out.println("\u001B[31m" + "| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")" + "\u001B[0m");
+                } else {
+                    System.out.println("| Error executing command observed in: " + commandExecutionErrorServers + " (Total: " + commandExecutionErrorServers.size() + ")");
+                }
+                System.out.println("");
                 System.out.println("\u001B[31m ------ FEW ISSUES OBSERVED!! PLS CHECK-----\u001B[0m");
-            	
+
             }
-            
-            
+
             System.out.println("--------------------------------------------------------------------------------");
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
@@ -236,9 +248,14 @@ public class MultiServerSSHCommandExecutor {
     }
 
     // Read commands from a file
-    public static String[] readCommands(String fileName) throws IOException {
+    public static List<String> readCommands(String fileName) throws IOException {
+        List<String> commands = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            return br.lines().toArray(String[]::new);
+            String line;
+            while ((line = br.readLine()) != null) {
+                commands.add(line);
+            }
         }
+        return commands;
     }
 }
