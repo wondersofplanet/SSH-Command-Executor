@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 
 public class MultiServerSSHCommandExecutor {
     private static final boolean failOutputPrintEnableFlag = true;
-    private static final boolean sucessOutputPrintEnableFlag = true;
+    private static final boolean successOutputPrintEnableFlag = true;
+    private static final int CONNECTION_TIMEOUT = 2000;
+    private static final String CONNECTION_FILE_NAME = "connection.txt";
+    private static final String COMMANDS_FILE_NAME = "commands.txt";
 
     public static void main(String[] args) {
         Set<String> failedServers = new HashSet<>();
@@ -28,10 +31,10 @@ public class MultiServerSSHCommandExecutor {
             System.out.println("--------------------------------------------------------------------------------");
 
             // Read connection details from file
-            String[][] servers = readServerList("connection.txt");
+            String[][] servers = readServerList(CONNECTION_FILE_NAME);
 
             // Read servers from commands file
-            List<String> serversInCommands = readServersFromCommands("commands.txt");
+            List<String> serversInCommands = readServersFromCommands(COMMANDS_FILE_NAME);
 
             // Validate if servers in commands file are present in connection file
             List<String> serversNotInConnection = serversInCommands.stream()
@@ -39,7 +42,7 @@ public class MultiServerSSHCommandExecutor {
                     .collect(Collectors.toList());
 
             if (!serversNotInConnection.isEmpty()) {
-                System.out.println("Error: The following servers listed in commands.txt are not present in connection.txt:");
+                System.out.println("Error: The following servers listed in " + COMMANDS_FILE_NAME + " are not present in " + CONNECTION_FILE_NAME + ":");
                 serversNotInConnection.forEach(System.out::println);
                 return;
             }
@@ -58,7 +61,7 @@ public class MultiServerSSHCommandExecutor {
                         System.out.println("|                              Server Connection Log                             |");
                         System.out.println("--------------------------------------------------------------------------------");
                         System.out.println("Connecting to Server:  " + host + "...");
-                        Thread.sleep(2000);
+                        Thread.sleep(CONNECTION_TIMEOUT);
                         System.out.println("");
                         System.out.println("");
 
@@ -76,7 +79,7 @@ public class MultiServerSSHCommandExecutor {
                         System.out.println();
 
                         // Read commands from file
-                        List<String> commands = readCommands("commands.txt");
+                        List<String> commands = readCommands(COMMANDS_FILE_NAME);
 
                         // Filter commands for the current server
                         List<String> serverCommands = commands.stream()
@@ -85,7 +88,7 @@ public class MultiServerSSHCommandExecutor {
 
                         // Execute filtered commands
                         for (String command : serverCommands) {
-                            Thread.sleep(2000);
+                            Thread.sleep(CONNECTION_TIMEOUT);
                             try {
                                 String[] parts = command.split(" ", 2);
                                 if (parts.length == 2) {
@@ -241,23 +244,22 @@ public class MultiServerSSHCommandExecutor {
                 // Read and print error messages
                 List<String> errorLines = errReader.lines().collect(Collectors.toList());
                 if (!errorLines.isEmpty()) {
-                	
                     System.out.println("Error executing command ---> '" + command + "':\n");
-                    if(failOutputPrintEnableFlag) {
-                    errorLines.forEach(line -> System.out.println(line));
-                    System.out.println("\n");
+                    if (failOutputPrintEnableFlag) {
+                        errorLines.forEach(line -> System.out.println(line));
+                        System.out.println("\n");
                     }
                     return false;
                 } else {
                     System.out.println("Success executing command --->'" + command + "'");
-                    if(sucessOutputPrintEnableFlag) {
-                    outputLines.forEach(line -> System.out.println("Output of command '" + command + "'-->\n" + line));
-                    System.out.println("\n");
+                    if (successOutputPrintEnableFlag) {
+                        outputLines.forEach(line -> System.out.println("Output of command '" + command + "'-->\n" + line));
+                        System.out.println("\n");
                     }
                     return true;
                 }
             }
-        }finally {
+        } finally {
             // Do not disconnect the session here, as we're keeping the session open for multiple commands
         }
     }
@@ -273,7 +275,7 @@ public class MultiServerSSHCommandExecutor {
         }
         return commands;
     }
-    
+
     // Read servers from commands file
     public static List<String> readServersFromCommands(String fileName) throws IOException {
         List<String> servers = new ArrayList<>();
