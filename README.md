@@ -1,75 +1,41 @@
-MultiServerSSHCommandExecutor 
------------------------------
-
-Please download this README file and then read it, this ensure its contents are accurately understood by the user, as GitHub rendering may sometimes cause formatting issues that could mislead the reader.
-
---BEST WAY TO USE
-
-1) Downlaod the code.
-2) build a JAR file from the downloaded code, and finally execute the JAR.
-Note: in the same folder where jar is, keep your commands.txt and connection.txt.
-
 MultiServerSSHCommandExecutor
 
+Introduction
+MultiServerSSHCommandExecutor is a Java program designed to execute commands on multiple servers via SSH concurrently. It reads server connection details and commands to execute from separate text files and performs the specified operations on each server.
 
-Overview:
-This Java program allows you to execute commands on multiple remote servers via SSH. It reads server connection details and commands from text files, establishes SSH connections to each server, one by one , executes the provided commands, and provides a summary of the execution results.
+Features
+SSH Connection: Establishes SSH connections to multiple servers using username, password, host, and port details provided in a connection file.
+Command Execution: Executes commands on each server concurrently, reading the commands from a separate file.
+Error Handling: Handles connection errors, command execution errors, and invalid file formats gracefully, providing detailed logs for debugging.
+Summary Log: Generates a summary log at the end of execution, indicating the total number of servers, connection issues, and command execution errors.
 
-Features:
-Multiple Server Support: You can provide a list of servers along with their connection details (username, password, host, and port) in a text file.
-Command Execution: Specify commands to be executed on each server in a separate text file.
-Error Handling: The program handles connection errors and command execution errors gracefully, providing detailed logs for troubleshooting.
-Summary Log: It generates a summary log at the end, indicating the total number of servers processed, any connection issues encountered, and any errors observed during command execution.
-How to Use:
-Prepare Input Files:
+Usage
+Prerequisites: Ensure that Java Development Kit (JDK) is installed on your system.
+Setup Connection File: Create a text file (connection.txt) containing the connection details for each server in the following format:
+username1,password1,host1,port1
+username2,password2,host2,port2
+...
+Setup Commands File: Create another text file (commands.txt) containing the commands to execute on each server in the following format:
+host1 command1
+host2 command2
+...
+Run the Program: Compile and run the MultiServerSSHCommandExecutor class. Ensure that all required Java files are in the same directory.
+View Output: The program will display detailed logs for each server's connection, command execution, and a combined summary log at the end.
+Example
+Suppose you have the following connection.txt file:
 
-Create a text file (connection.txt) containing server connection details in the format: username,password,host,port.
-Create another text file (commands.txt) containing the commands to be executed on each server, with each command on a new line.
-Run the Program:
+user1,password1,server1.example.com,22
+user2,password2,server2.example.com,22
+And the following commands.txt file:
 
-Compile and run the SSHCommandExecutor.java file.
-The program will read the input files, establish SSH connections, execute commands, and provide a summary of the execution results.
-Review Summary Log:
+bash
+server1.example.com ls -l
+server2.example.com ps aux
+Running the program will connect to server1.example.com and execute ls -l, then connect to server2.example.com and execute ps aux. Finally, it will display a summary log of the execution.
 
-At the end of execution, review the combined summary log to identify any connection issues or command execution errors.
-Note:
-Ensure that you have SSH access to the remote servers and that the provided credentials are correct.
-Make sure that the input files (connection.txt and commands.txt) are correctly formatted to avoid errors during execution.
+Dependencies
+This program uses the following external library:
 
-Example connection.txt:
-
-userName,Password,ServerIPAddress,PortNo
-batman,batman,111.11.11.111,22
-batman2,batman3,111.11.11.111,22
- 
-Example commands.txt:
-
-echo Hello
-ls -l
-pwd
-
-
-Execution: Compile and run the MultiServerSSHCommandExecutor.java file. The program will establish an SSH connection, execute the commands, and display the output along with success and failure counts.
-
-Dependencies:
-JSch Library: Used for SSH connectivity and command execution. Ensure the JSch library is included in the project dependencies.
-
-https://mvnrepository.com/artifact/com.jcraft/jsch/0.1.55
-
-
-
-run jar using bat command:
-
-Note: in the same folder where jar is, keep your commands.txt and connection.txt.
-----------------------
-java -jar test.jar
-
-pause
----------------------
-
-You should place the connection.txt and commands.txt files in the same directory as the Java program (SSHCommandExecutor.java). When you run the program, it will look for these files in the current directory by default. 
-
-Contributions:
-Contributions and feedback are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
+JSch: A pure Java implementation of SSH2.
 
 useful command - echo "Hello, the memory size of $(hostname -I) is $(awk '/MemTotal/ {print $2}' /proc/meminfo)"
