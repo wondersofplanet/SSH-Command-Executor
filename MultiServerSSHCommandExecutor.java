@@ -251,9 +251,10 @@ public class MultiServerSSHCommandExecutor {
                     }
                     return false;
                 } else {
-                    System.out.println("Success executing command --->'" + command + "'");
                     if (successOutputPrintEnableFlag) {
-                        outputLines.forEach(line -> System.out.println("Output of command '" + command + "'-->\n" + line));
+                        // Print the whole output at once
+                        System.out.println("Success executing command --->'" + command + "'");
+                        outputLines.forEach(line -> System.out.println(line));
                         System.out.println("\n");
                     }
                     return true;
@@ -263,7 +264,6 @@ public class MultiServerSSHCommandExecutor {
             // Do not disconnect the session here, as we're keeping the session open for multiple commands
         }
     }
-
     // Read commands from a file
     public static List<String> readCommands(String fileName) throws IOException {
         List<String> commands = new ArrayList<>();
